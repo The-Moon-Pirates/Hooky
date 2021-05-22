@@ -13,35 +13,36 @@ public class HookLauncher: MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    if (!_hookThrowed) { 
-        //    Vector2 destination = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //    _currentHook = (GameObject)Instantiate(Hook, transform.position, Quaternion.identity);
-        //    _currentHook.GetComponent<RopeScript>().Destination = destination;
-        //    _hookThrowed = true;
-        //    }
-        //    else
-        //    {
-        //        DestroyHook();
-        //    }
-        //}
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (!_hookThrowed)
+            {
+                Vector2 destination = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                _currentHook = (GameObject)Instantiate(Hook, transform.position, Quaternion.identity);
+                _currentHook.GetComponent<RopeScript>().Destination = destination;
+                _hookThrowed = true;
+            }
+            else
+            {
+                DestroyHook();
+            }
+        }
 
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    if (!_hookThrowed)
-        //    {
-        //        Vector2 destination = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //        _currentHook = (GameObject)Instantiate(Hook, transform.position, Quaternion.identity);
-        //        _currentHook.GetComponent<RopeScript>().Destination = destination;
-        //        _hookThrowed = true;
-        //        FindObjectOfType<RopeScript>().IsImpulsed = true;
-        //    }
-        //    else
-        //    {
-        //        DestroyHook();
-        //    }
-        //}
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (!_hookThrowed)
+            {
+                Vector2 destination = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                _currentHook = (GameObject)Instantiate(Hook, transform.position, Quaternion.identity);
+                _currentHook.GetComponent<RopeScript>().Destination = destination;
+                _hookThrowed = true;
+                FindObjectOfType<RopeScript>().IsImpulsed = true;
+            }
+            else
+            {
+                DestroyHook();
+            }
+        }
     }
 
     public void DestroyHook()
