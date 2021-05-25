@@ -60,15 +60,21 @@ public class RopeScript : MonoBehaviour
             if(IsImpulsed == true) {
                 ////Ajout d'une force en direction du hook
                 var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
-                _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * 200, ForceMode2D.Impulse);
+                _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * 500, ForceMode2D.Impulse);
                 IsImpulsed = false;
                 StartCoroutine(DestroyHookCoroutine());
+            }
+            else
+            {
+                Debug.Log("No Impulse");
+                var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
+                _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * 100, ForceMode2D.Impulse);
             }
 
 
             foreach (GameObject go in _nodesList)
             {
-                go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 2f;
+                go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 1f;
             }
 
 
@@ -77,24 +83,13 @@ public class RopeScript : MonoBehaviour
 
         }
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
-            var perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
-            _player.GetComponent<Rigidbody2D>().AddForce(perpendicularDirection * 100, ForceMode2D.Force);
-        }
-
         DrawLine();
     }
 
-    private void HandleInput(Vector2 aimDirection)
+    public void HandleInput(Vector2 aimDirection)
     {
         if (Input.GetMouseButton(0))
         {
-            if (_hookFinishTravel) return;
-            _lineRenderer.enabled = true;
-
-            var hit = Physics2D.Raycast(_player.transform.position, aimDirection, _ropeMaxCastDistance, RopeLayerMask);
         }
 
         if (Input.GetMouseButton(1))
