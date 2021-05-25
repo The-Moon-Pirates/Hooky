@@ -9,7 +9,7 @@ public class HookLauncher: MonoBehaviour
     public bool _hookThrowed { get; private set; } = false;
     public Vector2 aimDirection;
     public LayerMask RopeLayerMask;
-    public LayerMask PlatformLayerMask;
+
 
     [SerializeField]
     private float _ropeLength = 200f;
@@ -107,12 +107,7 @@ public class HookLauncher: MonoBehaviour
         _hookThrowed = false;
     }
 
-    private bool IsTouchingGround()
-    {
-        float offsetHeight = 0.1f;
-        RaycastHit2D raycastHit = Physics2D.BoxCast(GetComponent<BoxCollider2D>().bounds.center, GetComponent<BoxCollider2D>().bounds.size, 0f, Vector2.down, offsetHeight, PlatformLayerMask);
-        return raycastHit != null;
-    }
+
 
 
 }

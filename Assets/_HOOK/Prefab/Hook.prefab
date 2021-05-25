@@ -142,8 +142,9 @@ MonoBehaviour:
   RopeLayerMask:
     serializedVersion: 2
     m_Bits: 0
+  ImpulseForce: 150
   _speed: 1
-  _distanceBetweenNodes: 1
+  _distanceBetweenNodes: 0.5
   _ropeMaxCastDistance: 20
 --- !u!120 &-2755711666123202507
 LineRenderer:

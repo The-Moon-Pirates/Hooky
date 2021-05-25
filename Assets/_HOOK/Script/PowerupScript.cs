@@ -6,7 +6,7 @@ public class PowerupScript : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.layer == 8)
+        if(collision.gameObject.tag == "Player")
         {
             collision.gameObject.GetComponent<HookLauncher>()._canThrow = true;
             //GetComponent<SpriteRenderer>().enabled = false;

@@ -8,6 +8,7 @@ public class RopeScript : MonoBehaviour
     public Vector2 Destination;
     public bool IsImpulsed = false;
     public LayerMask RopeLayerMask;
+    public float ImpulseForce;
 
     [SerializeField]
     private float _speed = 1.0f;
@@ -60,21 +61,21 @@ public class RopeScript : MonoBehaviour
             if(IsImpulsed == true) {
                 ////Ajout d'une force en direction du hook
                 var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
-                _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * 500, ForceMode2D.Impulse);
+                _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * ImpulseForce, ForceMode2D.Impulse);
                 IsImpulsed = false;
                 StartCoroutine(DestroyHookCoroutine());
             }
-            else
-            {
-                Debug.Log("No Impulse");
-                var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
-                _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * 100, ForceMode2D.Impulse);
-            }
+            //else
+            //{
+            //    Debug.Log("No Impulse");
+            //    var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
+            //    _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * 100, ForceMode2D.Impulse);
+            //}
 
 
             foreach (GameObject go in _nodesList)
             {
-                go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 1f;
+                go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 2f;
             }
 
 

@@ -6,7 +6,7 @@ public class GroundCheckScript : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == 9)
+        if (collision.gameObject.tag != "Floor")
             return;
 
         Debug.Log("Touch Ground");
