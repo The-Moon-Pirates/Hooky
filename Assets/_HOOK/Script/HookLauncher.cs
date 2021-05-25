@@ -15,11 +15,13 @@ public class HookLauncher: MonoBehaviour
     private float _ropeLength = 200f;
 
     private GameObject _currentHook;
-    private const float _DISTANCE_CROSSHAIR = 1f;
+    private const float _DISTANCE_CROSSHAIR = 1.5f;
 
     private Transform _crosshairTransform;
     private SpriteRenderer _crosshairSprite;
     private Vector2 _playerPosition;
+    private bool _isSwinging;
+    private Queue<GameObject> _ropeList = new Queue<GameObject>();
 
     public bool _canThrow = true;
 
@@ -53,6 +55,13 @@ public class HookLauncher: MonoBehaviour
 
                 var hit = Physics2D.Raycast(_playerPosition, aimDirection, _ropeLength, RopeLayerMask);
                 _currentHook = (GameObject)Instantiate(Hook, transform.position, Quaternion.identity);
+                _ropeList.Enqueue(_currentHook);
+
+                if(_ropeList.Count > 5)
+                {
+                    Destroy(_ropeList.Dequeue());
+
+                }
 
                 if(hit.collider == null) { 
                 Vector2 direction = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition)  - (Vector2)_playerPosition;
@@ -63,6 +72,7 @@ public class HookLauncher: MonoBehaviour
                 {
                     Debug.Log("Swing");
                     _currentHook.GetComponent<RopeScript>().Destination = hit.point;
+                    _isSwinging = true;
                 }
                 else if(hit.collider != null && hit.collider.tag != "Swing")
                 {
@@ -73,23 +83,14 @@ public class HookLauncher: MonoBehaviour
 
                 _hookThrowed = true;
             }
-            else
+            else if (_isSwinging)
             {
-                DestroyHook();
+                _isSwinging = false;
+                FindObjectOfType<RopeScript>().LooseRope();
             }
         }
 
-        if (!_hookThrowed)
-        {
-            if(_crosshairSprite.enabled == false)
-                _crosshairSprite.enabled = true;
-
             SetCrosshairPosition(aimAngle);
-        }
-        else
-        {
-            _crosshairSprite.enabled = false;
-        }
     }
 
     private void SetCrosshairPosition(float aimAngle)
@@ -101,11 +102,18 @@ public class HookLauncher: MonoBehaviour
         _crosshairTransform.transform.position = crossHairPosition;
     }
 
-    public void DestroyHook()
+    public void LooseRope()
     {
-        Destroy(_currentHook);
+        //Destroy(_currentHook);
         _hookThrowed = false;
     }
+
+    //public void DestroyRope()
+    //{
+    //    Destroy(_currentHook);
+    //    _isSwinging = false;
+    //    _hookThrowed = false;
+    //}
 
 
 

@@ -141,10 +141,10 @@ MonoBehaviour:
   IsImpulsed: 0
   RopeLayerMask:
     serializedVersion: 2
-    m_Bits: 0
-  ImpulseForce: 150
-  _speed: 1
-  _distanceBetweenNodes: 0.5
+    m_Bits: 320
+  ImpulseForce: 40
+  _speed: 0.4
+  _distanceBetweenNodes: 0.3
   _ropeMaxCastDistance: 20
 --- !u!120 &-2755711666123202507
 LineRenderer:

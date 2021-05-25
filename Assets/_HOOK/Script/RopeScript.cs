@@ -9,6 +9,7 @@ public class RopeScript : MonoBehaviour
     public bool IsImpulsed = false;
     public LayerMask RopeLayerMask;
     public float ImpulseForce;
+    public bool _isRopeLoosed {get; private set;} = false;
 
     [SerializeField]
     private float _speed = 1.0f;
@@ -61,22 +62,29 @@ public class RopeScript : MonoBehaviour
             if(IsImpulsed == true) {
                 ////Ajout d'une force en direction du hook
                 var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
+                _player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                 _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * ImpulseForce, ForceMode2D.Impulse);
                 IsImpulsed = false;
+                foreach (GameObject go in _nodesList)
+                {
+                    go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0f;
+                }
                 StartCoroutine(DestroyHookCoroutine());
             }
-            //else
-            //{
-            //    Debug.Log("No Impulse");
-            //    var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
-            //    _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * 100, ForceMode2D.Impulse);
-            //}
-
-
-            foreach (GameObject go in _nodesList)
+            else
             {
-                go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 2f;
+                Debug.Log("No Impulse");
+
+                foreach (GameObject go in _nodesList)
+                {
+                    go.gameObject.GetComponent<Rigidbody2D>().mass = 1f;
+                    go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 2f;
+                }
+                FindObjectOfType<HookLauncher>().LooseRope();
             }
+
+
+
 
 
 
@@ -87,21 +95,9 @@ public class RopeScript : MonoBehaviour
         DrawLine();
     }
 
-    public void HandleInput(Vector2 aimDirection)
-    {
-        if (Input.GetMouseButton(0))
-        {
-        }
-
-        if (Input.GetMouseButton(1))
-        {
-            ResetRope();
-        }
-    }
-
     private void ResetRope()
     {
-        FindObjectOfType<HookLauncher>().DestroyHook();
+        FindObjectOfType<HookLauncher>().LooseRope();
     }
 
     void DrawLine()
@@ -114,7 +110,8 @@ public class RopeScript : MonoBehaviour
             _lineRenderer.SetPosition(i, _nodesList[i].transform.position);
         }
 
-        _lineRenderer.SetPosition(i,_player.transform.position);
+        if(!_isRopeLoosed)
+        _lineRenderer.SetPosition(i,_lastNode.transform.position);
     }
 
     void CreateNode()
@@ -135,10 +132,22 @@ public class RopeScript : MonoBehaviour
         _nodesList.Add(_lastNode);
     }
 
+    public void LooseRope()
+    {
+        _isRopeLoosed = true;
+        FindObjectOfType<HookLauncher>().LooseRope();
+        _lastNode.GetComponent<HingeJoint2D>().enabled = false;
+        foreach (GameObject go in _nodesList)
+        {
+            go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 1f;
+        }
+        _nbrOfNodes--;
+    }
+
     IEnumerator DestroyHookCoroutine()
     {
-        yield return new WaitForSeconds(0.3f);
-        FindObjectOfType<HookLauncher>().DestroyHook();
+        yield return new WaitForSeconds(0.6f);
+        LooseRope();
     }
 
     IEnumerator SwingForce()
