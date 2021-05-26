@@ -9,6 +9,7 @@ public class RopeScript : MonoBehaviour
     public bool IsImpulsed = false;
     public LayerMask RopeLayerMask;
     public float ImpulseForce;
+    public bool HookMissed;
     public bool _isRopeLoosed {get; private set;} = false;
 
     [SerializeField]
@@ -16,7 +17,7 @@ public class RopeScript : MonoBehaviour
     [SerializeField]
     private float _distanceBetweenNodes = 2f;
     [SerializeField]
-    private float _ropeMaxCastDistance = 20f;
+    private float _ropeCooldown;
 
     public bool _hookFinishTravel { get; private set; } = true;
 
@@ -44,7 +45,7 @@ public class RopeScript : MonoBehaviour
 
         transform.position = Vector2.MoveTowards(transform.position, Destination, _speed);
 
-        if((Vector2)transform.position != Destination)
+        if((Vector2)transform.position != Destination && !_isRopeLoosed)
         {
             if(Vector2.Distance(_player.transform.position, _lastNode.transform.position) > _distanceBetweenNodes)
             {
@@ -59,17 +60,14 @@ public class RopeScript : MonoBehaviour
             }
             _lastNode.GetComponent<HingeJoint2D>().connectedBody = _player.GetComponent<Rigidbody2D>();
 
-            if(IsImpulsed == true) {
-                ////Ajout d'une force en direction du hook
-                var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
-                _player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-                _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * ImpulseForce, ForceMode2D.Impulse);
-                IsImpulsed = false;
-                foreach (GameObject go in _nodesList)
-                {
-                    go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0f;
-                }
-                StartCoroutine(DestroyHookCoroutine());
+            if (IsImpulsed == true) 
+            {
+                StartCoroutine(WaitForThrowingPlayer(_ropeCooldown));
+            }
+            else if(HookMissed == true)
+            {
+                LooseRope();
+                FindObjectOfType<HookLauncher>().CanThrow = true;
             }
             else
             {
@@ -81,14 +79,8 @@ public class RopeScript : MonoBehaviour
                     go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 2f;
                 }
                 FindObjectOfType<HookLauncher>().LooseRope();
+
             }
-
-
-
-
-
-
-            //StartCoroutine(SwingForce());
 
         }
 
@@ -111,7 +103,7 @@ public class RopeScript : MonoBehaviour
         }
 
         if(!_isRopeLoosed)
-        _lineRenderer.SetPosition(i,_lastNode.transform.position);
+        _lineRenderer.SetPosition(i,_player.transform.position);
     }
 
     void CreateNode()
@@ -140,8 +132,23 @@ public class RopeScript : MonoBehaviour
         foreach (GameObject go in _nodesList)
         {
             go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 1f;
+            go.gameObject.GetComponent<Rigidbody2D>().mass = 1f;
         }
         _nbrOfNodes--;
+    }
+
+    private void ThrowPlayer()
+    {
+        ////Ajout d'une force en direction du hook
+        var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
+        _player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * ImpulseForce, ForceMode2D.Impulse);
+        IsImpulsed = false;
+        foreach (GameObject go in _nodesList)
+        {
+            go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0f;
+        }
+        StartCoroutine(DestroyHookCoroutine());
     }
 
     IEnumerator DestroyHookCoroutine()
@@ -150,17 +157,10 @@ public class RopeScript : MonoBehaviour
         LooseRope();
     }
 
-    IEnumerator SwingForce()
+    IEnumerator WaitForThrowingPlayer(float cd)
     {
-        ////Ajout d'une force en direction du hook
-        float time = 0;
-        while(time < 1f) {
-            var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
-            var perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
-            _player.GetComponent<Rigidbody2D>().AddForce(perpendicularDirection * 10, ForceMode2D.Force);
-        time += Time.deltaTime;
-        }
-
-        return null;
+        yield return new WaitForSeconds(cd);
+        ThrowPlayer();
     }
+
 }

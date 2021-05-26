@@ -4,14 +4,46 @@ using UnityEngine;
 
 public class GroundCheckScript : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D collision)
+    public LayerMask PlatformLayerMask;
+
+    private bool _playerJump = false;
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.tag != "Floor")
+    //        return;
+
+    //    Debug.Log("Touch Ground");
+    //    FindObjectOfType<HookLauncher>().CanThrow = true;
+
+    //    GameObject.Find("Player").GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+    //}
+
+    private void Update()
     {
-        if (collision.gameObject.tag != "Floor")
-            return;
+        float offsetHeight = 0.1f;
+        RaycastHit2D raycastHit = Physics2D.BoxCast(GetComponent<Collider2D>().bounds.center, GetComponent<Collider2D>().bounds.size, 0f, Vector2.down, offsetHeight, PlatformLayerMask);
 
-        Debug.Log("Touch Ground");
-        FindObjectOfType<HookLauncher>()._canThrow = true;
+        if (raycastHit.collider != null)
+        {
+            Debug.Log("Ground");
+            if (_playerJump) {
 
-        GameObject.Find("Player").GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                if (raycastHit.collider.tag == "Pente")
+                {
+                    Debug.Log("Pente");
+                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                }
+                _playerJump = false;
+            }
+
+            if (!FindObjectOfType<HookLauncher>().CanThrow && !FindObjectOfType<HookLauncher>()._hookThrowed)
+                FindObjectOfType<HookLauncher>().CanThrow = true;
+        }
+        else {
+            Debug.Log("AirTime");
+            _playerJump = true;
+        }
     }
+
 }

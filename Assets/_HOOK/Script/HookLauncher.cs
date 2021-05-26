@@ -9,12 +9,11 @@ public class HookLauncher: MonoBehaviour
     public bool _hookThrowed { get; private set; } = false;
     public Vector2 aimDirection;
     public LayerMask RopeLayerMask;
+    public GameObject _currentHook { get; private set; }
 
 
     [SerializeField]
     private float _ropeLength = 200f;
-
-    private GameObject _currentHook;
     private const float _DISTANCE_CROSSHAIR = 1.5f;
 
     private Transform _crosshairTransform;
@@ -23,7 +22,7 @@ public class HookLauncher: MonoBehaviour
     private bool _isSwinging;
     private Queue<GameObject> _ropeList = new Queue<GameObject>();
 
-    public bool _canThrow = true;
+    public bool CanThrow = true;
 
     private void Start()
     {
@@ -49,9 +48,9 @@ public class HookLauncher: MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (!_hookThrowed && _canThrow)
+            if (!_hookThrowed && CanThrow)
             {
-                _canThrow = false;
+                CanThrow = false;
 
                 var hit = Physics2D.Raycast(_playerPosition, aimDirection, _ropeLength, RopeLayerMask);
                 _currentHook = (GameObject)Instantiate(Hook, transform.position, Quaternion.identity);
@@ -66,7 +65,7 @@ public class HookLauncher: MonoBehaviour
                 if(hit.collider == null) { 
                 Vector2 direction = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition)  - (Vector2)_playerPosition;
                 _currentHook.GetComponent<RopeScript>().Destination = (Vector2)_playerPosition + (direction.normalized * _ropeLength);
-                FindObjectOfType<RopeScript>().IsImpulsed = true;
+                _currentHook.GetComponent<RopeScript>().HookMissed = true;
                 }
                 else if (hit.collider != null && hit.collider.tag == "Swing")
                 {
@@ -78,7 +77,7 @@ public class HookLauncher: MonoBehaviour
                 {
                     Debug.Log("Wall");
                     _currentHook.GetComponent<RopeScript>().Destination = hit.point;
-                    FindObjectOfType<RopeScript>().IsImpulsed = true;
+                    _currentHook.GetComponent<RopeScript>().IsImpulsed = true;
                 }
 
                 _hookThrowed = true;
@@ -86,7 +85,7 @@ public class HookLauncher: MonoBehaviour
             else if (_isSwinging)
             {
                 _isSwinging = false;
-                FindObjectOfType<RopeScript>().LooseRope();
+                _currentHook.GetComponent<RopeScript>().LooseRope();
             }
         }
 

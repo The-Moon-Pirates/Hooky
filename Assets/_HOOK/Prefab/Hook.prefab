@@ -101,7 +101,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -117,7 +117,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 2702844435569474310}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 9dd848cff7c437940a3dc4f59be9e1b3, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -143,9 +143,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 320
   ImpulseForce: 40
-  _speed: 0.4
-  _distanceBetweenNodes: 0.3
-  _ropeMaxCastDistance: 20
+  HookMissed: 0
+  _speed: 0.8
+  _distanceBetweenNodes: 0.5
+  _ropeCooldown: 0.1
 --- !u!120 &-2755711666123202507
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -259,7 +260,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: -0.98, y: -1.49}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0

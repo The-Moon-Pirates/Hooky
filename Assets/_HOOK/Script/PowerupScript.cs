@@ -8,7 +8,7 @@ public class PowerupScript : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<HookLauncher>()._canThrow = true;
+            collision.gameObject.GetComponent<HookLauncher>().CanThrow = true;
             //GetComponent<SpriteRenderer>().enabled = false;
             Debug.Log("CanThrowAgain");
         }
