@@ -6,7 +6,7 @@ public class GroundCheckScript : MonoBehaviour
 {
     public LayerMask PlatformLayerMask;
 
-    private bool _playerJump = false;
+    public bool _playerJump { get; private set; } = false;
 
     //private void OnTriggerEnter2D(Collider2D collision)
     //{
@@ -21,7 +21,7 @@ public class GroundCheckScript : MonoBehaviour
 
     private void Update()
     {
-        float offsetHeight = 0.1f;
+        float offsetHeight = 1f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(GetComponent<Collider2D>().bounds.center, GetComponent<Collider2D>().bounds.size, 0f, Vector2.down, offsetHeight, PlatformLayerMask);
 
         if (raycastHit.collider != null)
