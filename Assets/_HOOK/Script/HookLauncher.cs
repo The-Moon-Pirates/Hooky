@@ -10,6 +10,7 @@ public class HookLauncher: MonoBehaviour
     public Vector2 aimDirection;
     public LayerMask RopeLayerMask;
     public GameObject _currentHook { get; private set; }
+    public bool _isSwinging { get; private set; }
 
 
     [SerializeField]
@@ -19,7 +20,7 @@ public class HookLauncher: MonoBehaviour
     private Transform _crosshairTransform;
     private SpriteRenderer _crosshairSprite;
     private Vector2 _playerPosition;
-    private bool _isSwinging;
+    
     private Queue<GameObject> _ropeList = new Queue<GameObject>();
 
     public bool CanThrow = true;
