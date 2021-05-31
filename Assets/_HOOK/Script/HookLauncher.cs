@@ -11,6 +11,7 @@ public class HookLauncher: MonoBehaviour
     public LayerMask RopeLayerMask;
     public GameObject _currentHook { get; private set; }
     public bool _isSwinging { get; private set; }
+    public bool IsPlayerCrashing;
 
 
     [SerializeField]
@@ -72,6 +73,7 @@ public class HookLauncher: MonoBehaviour
                 {
                     Debug.Log("Swing");
                     _currentHook.GetComponent<RopeScript>().Destination = hit.point;
+                    _currentHook.GetComponent<RopeScript>().IsSwinging = true;
                     _isSwinging = true;
                 }
                 else if(hit.collider != null && hit.collider.tag != "Swing")
@@ -91,6 +93,9 @@ public class HookLauncher: MonoBehaviour
         }
 
             SetCrosshairPosition(aimAngle);
+
+        if (GetComponent<Rigidbody2D>().velocity.y < -20f)
+            IsPlayerCrashing = true;
     }
 
     private void SetCrosshairPosition(float aimAngle)

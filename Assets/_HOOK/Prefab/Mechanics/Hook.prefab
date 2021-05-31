@@ -141,7 +141,7 @@ MonoBehaviour:
   IsImpulsed: 0
   RopeLayerMask:
     serializedVersion: 2
-    m_Bits: 320
+    m_Bits: 2368
   ImpulseForce: 40
   HookMissed: 0
   _speed: 0.8

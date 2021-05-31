@@ -7,6 +7,7 @@ public class RopeScript : MonoBehaviour
     public GameObject NodePrefab;
     public Vector2 Destination;
     public bool IsImpulsed = false;
+    public bool IsSwinging = false;
     public LayerMask RopeLayerMask;
     public float ImpulseForce;
     public bool HookMissed;
@@ -63,6 +64,9 @@ public class RopeScript : MonoBehaviour
             if (IsImpulsed == true) 
             {
                 StartCoroutine(WaitForThrowingPlayer(_ropeCooldown));
+            }else if(IsSwinging && !FindObjectOfType<GroundCheckScript>()._playerJump)
+            {
+                StartCoroutine(WaitForThrowingPlayer(_ropeCooldown));
             }
             else if(HookMissed == true)
             {
@@ -71,8 +75,6 @@ public class RopeScript : MonoBehaviour
             }
             else
             {
-                Debug.Log("No Impulse");
-
                 foreach (GameObject go in _nodesList)
                 {
                     go.gameObject.GetComponent<Rigidbody2D>().mass = 1f;
@@ -142,6 +144,7 @@ public class RopeScript : MonoBehaviour
         ////Ajout d'une force en direction du hook
         var playerToHookDirection = (Destination - (Vector2)_player.transform.position).normalized;
         _player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        if (IsImpulsed) { 
         _player.GetComponent<Rigidbody2D>().AddForce(playerToHookDirection * ImpulseForce, ForceMode2D.Impulse);
         IsImpulsed = false;
         foreach (GameObject go in _nodesList)
@@ -149,6 +152,25 @@ public class RopeScript : MonoBehaviour
             go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0f;
         }
         StartCoroutine(DestroyHookCoroutine());
+        }
+        else
+        {
+            foreach (GameObject go in _nodesList)
+            {
+                go.gameObject.GetComponent<Rigidbody2D>().mass = 1f;
+                go.gameObject.GetComponent<Rigidbody2D>().gravityScale = 2f;
+            }
+
+            var perpendicularDirection = Vector2.zero;
+            if (Destination.x > _player.transform.position.x) { 
+                perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
+            }
+            else
+            {
+                perpendicularDirection = new Vector2(-playerToHookDirection.y, -playerToHookDirection.x);
+            }
+            _player.GetComponent<Rigidbody2D>().AddForce(perpendicularDirection * ImpulseForce/2, ForceMode2D.Impulse);
+        }
     }
 
     IEnumerator DestroyHookCoroutine()

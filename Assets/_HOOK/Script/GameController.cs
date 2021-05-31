@@ -11,13 +11,15 @@ public class GameController : MonoBehaviour
     void Start()
     {
         Cursor.visible = true;
+        FindObjectOfType<Camera>().transform.position = new Vector3(LevelsList[level].transform.position.x, LevelsList[level].transform.position.y, -10);
     }
 
     public void LoadLevel(int lvl)
     {
         if(level != lvl) { 
-        LevelsList[level].SetActive(false);
-        LevelsList[lvl].SetActive(true);
+        //LevelsList[level].SetActive(false);
+        //LevelsList[lvl].SetActive(true);
+        FindObjectOfType<Camera>().transform.position = new Vector3(LevelsList[lvl].transform.position.x, LevelsList[lvl].transform.position.y, -10);
         level = lvl;
         }
     }

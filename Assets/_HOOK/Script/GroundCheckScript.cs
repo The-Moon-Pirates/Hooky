@@ -21,7 +21,7 @@ public class GroundCheckScript : MonoBehaviour
 
     private void Update()
     {
-        float offsetHeight = 1f;
+        float offsetHeight = 0.1f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(GetComponent<Collider2D>().bounds.center, GetComponent<Collider2D>().bounds.size, 0f, Vector2.down, offsetHeight, PlatformLayerMask);
 
         if (raycastHit.collider != null)
@@ -32,9 +32,13 @@ public class GroundCheckScript : MonoBehaviour
                 if (raycastHit.collider.tag == "Pente")
                 {
                     Debug.Log("Pente");
-                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    if (FindObjectOfType<HookLauncher>().IsPlayerCrashing)
+                        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                 }
                 _playerJump = false;
+                if (FindObjectOfType<HookLauncher>().IsPlayerCrashing)
+                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                FindObjectOfType<HookLauncher>().IsPlayerCrashing = false;
             }
 
             if (!FindObjectOfType<HookLauncher>().CanThrow && !FindObjectOfType<HookLauncher>()._hookThrowed)
