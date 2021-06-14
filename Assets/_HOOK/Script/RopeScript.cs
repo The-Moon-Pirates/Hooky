@@ -64,7 +64,7 @@ public class RopeScript : MonoBehaviour
             if (IsImpulsed == true) 
             {
                 StartCoroutine(WaitForThrowingPlayer(_ropeCooldown));
-            }else if(IsSwinging && !FindObjectOfType<GroundCheckScript>()._playerJump)
+            }else if(IsSwinging && !FindObjectOfType<GroundCheckScript>()._playerInAir)
             {
                 StartCoroutine(WaitForThrowingPlayer(_ropeCooldown));
             }

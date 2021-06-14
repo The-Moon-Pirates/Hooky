@@ -6,7 +6,7 @@ public class GroundCheckScript : MonoBehaviour
 {
     public LayerMask PlatformLayerMask;
 
-    public bool _playerJump { get; private set; } = false;
+    public bool _playerInAir { get; private set; } = false;
 
     //private void OnTriggerEnter2D(Collider2D collision)
     //{
@@ -27,7 +27,7 @@ public class GroundCheckScript : MonoBehaviour
         if (raycastHit.collider != null)
         {
             Debug.Log("Ground");
-            if (_playerJump) {
+            if (_playerInAir) {
 
                 if (raycastHit.collider.tag == "Pente")
                 {
@@ -35,7 +35,7 @@ public class GroundCheckScript : MonoBehaviour
                     if (FindObjectOfType<HookLauncher>().IsPlayerCrashing)
                         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                 }
-                _playerJump = false;
+                _playerInAir = false;
                 if (FindObjectOfType<HookLauncher>().IsPlayerCrashing)
                     GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                 FindObjectOfType<HookLauncher>().IsPlayerCrashing = false;
@@ -46,7 +46,7 @@ public class GroundCheckScript : MonoBehaviour
         }
         else {
             Debug.Log("AirTime");
-            _playerJump = true;
+            _playerInAir = true;
         }
     }
 
