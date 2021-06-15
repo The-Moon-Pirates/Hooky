@@ -6,10 +6,12 @@ public class FloorBounceScript : MonoBehaviour
 {
     public PhysicsMaterial2D BounceGround;
     public PhysicsMaterial2D NotBounceGround;
+
+    public PlayerMovement pMovement;
     // Update is called once per frame
     void Update()
     {
-        if (FindObjectOfType<GroundCheckScript>()._playerInAir)
+        if (FindObjectOfType<PlayerMovement>()._playerInAir)
             GetComponent<CompositeCollider2D>().sharedMaterial = BounceGround;
         else
             GetComponent<CompositeCollider2D>().sharedMaterial = NotBounceGround;

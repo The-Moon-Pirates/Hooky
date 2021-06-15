@@ -139,13 +139,14 @@ MonoBehaviour:
   NodePrefab: {fileID: 7942438148370014211, guid: da55d90d42f339a4cae7a9d4d96bee99, type: 3}
   Destination: {x: 0, y: 0}
   IsImpulsed: 0
+  IsSwinging: 0
   RopeLayerMask:
     serializedVersion: 2
     m_Bits: 2368
   ImpulseForce: 40
   HookMissed: 0
   _speed: 0.8
-  _distanceBetweenNodes: 0.5
+  _distanceBetweenNodes: 0.3
   _ropeCooldown: 0.1
 --- !u!120 &-2755711666123202507
 LineRenderer:
