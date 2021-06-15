@@ -68,6 +68,10 @@ public class HookLauncher: MonoBehaviour
                 Vector2 direction = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition)  - (Vector2)_playerPosition;
                 _currentHook.GetComponent<RopeScript>().Destination = (Vector2)_playerPosition + (direction.normalized * _ropeLength);
                 _currentHook.GetComponent<RopeScript>().HookMissed = true;
+                }else if(hit.collider.tag == "Portal")
+                {
+                    _currentHook.GetComponent<RopeScript>().Destination = hit.point;
+                    _currentHook.GetComponent<RopeScript>().HookMissed = true;
                 }
                 else if (hit.collider != null && hit.collider.tag == "Swing")
                 {

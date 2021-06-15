@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Floor
   - Pente
+  - Portal
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Powerup
   - Floor
   - LevelHitbox
-  - 
+  - Portal
   - 
   - 
   - 
