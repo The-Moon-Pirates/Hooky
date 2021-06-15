@@ -469,7 +469,7 @@ MonoBehaviour:
   aimDirection: {x: 0, y: 0}
   RopeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 1025
   IsPlayerCrashing: 0
   _ropeLength: 11.5
   CanThrow: 1
@@ -603,6 +603,7 @@ MonoBehaviour:
     m_Bits: 1024
   runSpeed: 10
   _movementSmoothing: 0.05
+  _playerNearGround: 0
 --- !u!114 &565054755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21850,9 +21851,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aba760aeb0652c045b5e86cd1b268170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlatformLayerMask:
-    m_Bits: 0
-  <_playerInAir>k__BackingField: 0
 --- !u!1 &1569467747
 GameObject:
   m_ObjectHideFlags: 0

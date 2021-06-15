@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
 	private Rigidbody2D _rigidbody2D;
 	private Vector3 velocity = Vector3.zero;
     public bool _playerInAir { get; private set; } = false;
+    public bool _playerNearGround;
 
     private void Start()
 	{
@@ -22,19 +23,33 @@ public class PlayerMovement : MonoBehaviour
 
 	void Update()
 	{
-		horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+		//horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 		_rigidbody2D.velocity = Vector3.ClampMagnitude(_rigidbody2D.velocity, 28f);
 
-        float offsetHeight = 0.2f;
-        RaycastHit2D raycastHit = Physics2D.BoxCast(GetComponent<Collider2D>().bounds.center, GetComponent<Collider2D>().bounds.size, 0f, Vector2.down, offsetHeight, PlatformLayerMask);
+        if (FindObjectOfType<HookLauncher>().CanThrow && !_playerInAir)
+        {
+            var movement = Input.GetAxis("Horizontal");
+            transform.position += new Vector3(movement, 0, 0) * Time.deltaTime * runSpeed;
+        }
 
-        if (raycastHit.collider != null)
+        float offsetHeightPlayer = 0.2f;
+        RaycastHit2D raycastHitPlayer = Physics2D.BoxCast(GetComponent<Collider2D>().bounds.center, GetComponent<Collider2D>().bounds.size, 0f, Vector2.down, offsetHeightPlayer, PlatformLayerMask);
+
+        float offsetHeightGround = 2f;
+        RaycastHit2D raycastHitGroun = Physics2D.BoxCast(GetComponent<Collider2D>().bounds.center, GetComponent<Collider2D>().bounds.size, 0f, Vector2.down, offsetHeightGround, PlatformLayerMask);
+
+        if (raycastHitGroun.collider != null)
+            _playerNearGround = true;
+        else
+            _playerNearGround = false;
+
+        if (raycastHitPlayer.collider != null)
         {
             Debug.Log("Ground");
             if (_playerInAir)
             {
 
-                if (raycastHit.collider.tag == "Pente")
+                if (raycastHitPlayer.collider.tag == "Pente")
                 {
                     Debug.Log("Pente");
                     if (FindObjectOfType<HookLauncher>().IsPlayerCrashing)
@@ -42,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 _playerInAir = false;
                 if (FindObjectOfType<HookLauncher>().IsPlayerCrashing)
-                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    //GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                 FindObjectOfType<HookLauncher>().IsPlayerCrashing = false;
             }
 
@@ -58,14 +73,14 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    void FixedUpdate()
-	{
-        // Move our character
-        if (FindObjectOfType<HookLauncher>().CanThrow && !_playerInAir) { 
-		// Move the character by finding the target velocity
-		Vector3 targetVelocity = new Vector2(horizontalMove * 10f, _rigidbody2D.velocity.y);
-		// And then smoothing it out and applying it to the character
-		_rigidbody2D.velocity = Vector3.SmoothDamp(_rigidbody2D.velocity, targetVelocity, ref velocity, _movementSmoothing);
-		}
-	}
+ //   void FixedUpdate()
+	//{
+ //       // Move our character
+ //       if (FindObjectOfType<HookLauncher>().CanThrow && !_playerInAir) { 
+	//	// Move the character by finding the target velocity
+	//	Vector3 targetVelocity = new Vector2(horizontalMove * 10f, _rigidbody2D.velocity.y);
+	//	// And then smoothing it out and applying it to the character
+	//	_rigidbody2D.velocity = Vector3.SmoothDamp(_rigidbody2D.velocity, targetVelocity, ref velocity, _movementSmoothing);
+	//	}
+	//}
 }

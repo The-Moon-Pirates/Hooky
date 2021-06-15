@@ -120,6 +120,11 @@ public class HookLauncher: MonoBehaviour
     //    _hookThrowed = false;
     //}
 
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, _ropeLength);
+    }
 
 
 
